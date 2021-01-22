@@ -1,31 +1,29 @@
-const rangeText = document.querySelector(".rangeText"),
-  rangeBar = document.querySelector("#rangeBar"),
-  userInputNum = document.querySelector("#userInputNum"),
-  playBtn = document.querySelector(".playBtn"),
-  compare = document.querySelector(".compareSentence"),
-  result = document.querySelector(".result");
+const range = document.getElementById("js-range");
+const title = document.querySelector(".js-title");
+const guessForm = document.getElementById("js-guess");
+const result = document.getElementById("js-result");
 
-function sliderHandler(e) {
-  const sliderValue = e.target.value;
-  rangeText.innerText = `Generate a number between 0 and ${sliderValue}`;
+function handleRangeChange(e) {
+  const selectedRange = title.querySelector("span");
+  selectedRange.innerHTML = range.value;
 }
 
-function guessNumber(event) {
-  event.preventDefault();
-  const rangeOutput = rangeBar.value;
-  const currentValue = parseInt(userInputNum.value);
-  const random = Math.floor(Math.random() * rangeOutput);
-
-  compare.innerText = `You choose: ${currentValue}, machine choose: ${random}`;
-  if (currentValue === random) {
-    result.innerText = "You Win";
-  } else {
-    result.innerText = "You Lose";
+function handleGuessSubmit(e) {
+  e.preventDefault();
+  const guessInput = guessForm.querySelector("input");
+  if (guessInput.value === "") {
+    return;
   }
+  const max = range.value;
+  const random = Math.ceil(Math.random() * max);
+  const userGuess = parseInt(guessInput.value, 10);
+  const resultSpan = result.querySelector("span");
+  resultSpan.innerHTML = `
+  You chose: ${userGuess},
+  the machine chose: ${random}.<br />
+  <strong>${userGuess === random ? "You won!" : "You lost!"}</strong>
+  `;
 }
 
-function init() {
-  rangeBar.addEventListener("change", sliderHandler);
-  playBtn.addEventListener("click", guessNumber);
-}
-init();
+guessForm.addEventListener("submit", handleGuessSubmit);
+range.addEventListener("input", handleRangeChange);
